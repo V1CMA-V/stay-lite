@@ -1,0 +1,96 @@
+---
+import { Button } from './ui/button'
+---
+
+<footer class="bg-secondary relative mt-20 pb-8">
+  <div class="container">
+    <div class="md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+      <!-- Row one -->
+      <div class="mb-8 md:mb-0">
+        <h3 class="text-300 font-500 mb-4 capitalize">StayLite Hotel</h3>
+
+        <p class="mb-4">
+          StayLite Hotel is a luxurious hotel located in the heart of the city.
+          We offer a wide range of rooms and suites.
+        </p>
+
+        <a
+          href="/"
+          class="hover:text-primary transition-colors duration-300 ease-in-out"
+        >
+          <Button className="font-600 text-white">Get Started</Button>
+        </a>
+      </div>
+
+      <!-- Row two -->
+      <div class="mb-8 md:mb-0 md:justify-self-end lg:translate-x-12">
+        <h3 class="text-300 font-500 mb-4 capitalize">quick menu</h3>
+
+        <ul>
+          <li class="mb-2 list-none">
+            <a
+              href="/rooms"
+              class="hover:text-primary transition-colors duration-300 ease-in-out"
+            >
+              Rooms & Suites
+            </a>
+          </li>
+          <li class="list-none">
+            <a
+              href="/restaurant"
+              class="hover:text-primary transition-colors duration-300 ease-in-out"
+            >
+              Restaurant
+            </a>
+          </li>
+          <li class="list-none">
+            <a
+              href="/contact"
+              class="hover:text-primary transition-colors duration-300 ease-in-out"
+            >
+              Contact
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Row Three -->
+      <div class="mb-8 md:mb-0 md:justify-self-center lg:translate-x-12">
+        <h3 class="text-300 font-500 mb-4 capitalize">quick menu</h3>
+
+        <ul>
+          <li class="mb-2 list-none">
+            <a
+              href="/about"
+              class="hover:text-primary transition-colors duration-300 ease-in-out"
+            >
+              About Us
+            </a>
+          </li>
+          <li class="list-none">
+            <a
+              href="/galleries"
+              class="hover:text-primary transition-colors duration-300 ease-in-out"
+            >
+              Gallery
+            </a>
+          </li>
+          <li class="list-none">
+            <a
+              href="/policies"
+              class="hover:text-primary transition-colors duration-300 ease-in-out"
+            >
+              Policies
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pt-12 text-center">
+      <p>
+        Copyright &copy; {new Date().getFullYear()} StayLite Hotel. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
