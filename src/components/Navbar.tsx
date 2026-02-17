@@ -34,7 +34,7 @@ const Navbar = ({ isClicked, toggleNavClick }: NavbarProps) => {
           {navigation.map((item) => (
             <li key={item.name} className="text-200 font-500 mb-5 capitalize">
               <a
-                className={`${active === item.href ? 'text-primary' : ''} hover:text-primary transition-colors duration-300`}
+                className={`${active === item.href ? 'text-primary' : ''} hover:text-primary text-foreground transition-colors duration-300`}
                 href={item.href}
                 onClick={() => handleNavClick(item.href)}
               >
