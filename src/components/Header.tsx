@@ -11,7 +11,7 @@ const Header = () => {
   }
 
   return (
-    <header className="fixed top-0 z-50 w-full">
+    <header className="fixed top-0 z-50 w-full md:px-6">
       <div className="container flex items-center justify-between">
         {/* Logo */}
         <a className="text-200 font-800 z-10 inline-block" href="/">
