@@ -1,0 +1,47 @@
+---
+import Layout from '@/layouts/Layout.astro'
+
+import DeluxeImg from '@/assets/deluxe.webp'
+import RoomListing from '@/components/RoomListing'
+import { rooms } from '@/lib/constants'
+import { Image } from 'astro:assets'
+
+const filteredRooms =
+  rooms.filter((room) => room.category === 'deluxe-suite') || []
+
+console.log('Filtered rooms:', filteredRooms)
+---
+
+<Layout
+  title="Deluxe Rooms"
+  description="Discover our deluxe rooms at Stay Lite"
+>
+  <div class="relative z-40">
+    <div
+      class="absolute left-0 top-0 h-full w-full bg-linear-to-b from-black/50 to-background"
+    >
+    </div>
+
+    <div class="container flex h-[70vh] flex-col items-start justify-center">
+      <div class="z-40 mx-auto max-w-[600px] text-center">
+        <h1
+          class="mb-1 text-600 font-700 leading-[1.2] md:text-800 lg:text-900"
+        >
+          Deluxe Rooms
+        </h1>
+      </div>
+
+      <Image
+        class="absolute left-0 top-0 h-full w-full object-cover -z-10"
+        src={DeluxeImg}
+        alt="Deluxe Room"
+      />
+    </div>
+  </div>
+
+  <div class="container pt-28">
+    <div class="md:grid md:gap-9 md:grid-cols-2 lg:grid-cols-3">
+      {filteredRooms.map((room) => <RoomListing room={room} client:load />)}
+    </div>
+  </div>
+</Layout>
