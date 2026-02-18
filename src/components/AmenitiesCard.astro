@@ -1,0 +1,22 @@
+---
+import type { ComponentType } from 'react'
+
+interface Props {
+  icon: ComponentType<{ size?: number; className?: string }>
+  name: string
+  description: string
+}
+
+const { icon: Icon, name, description } = Astro.props as Props
+---
+
+<div
+  class="flex flex-col items-center justify-center rounded-lg border p-4 text-center"
+>
+  <div class="bg-primary flex size-12 items-center justify-center rounded-full">
+    <Icon size={24} className="text-primary-white" />
+  </div>
+
+  <h3 class="my-4 text-lg font-bold">{name}</h3>
+  <p class="text-sm text-muted-foreground">{description}</p>
+</div>

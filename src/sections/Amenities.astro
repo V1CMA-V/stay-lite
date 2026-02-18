@@ -1,0 +1,63 @@
+---
+import AmenitiesCard from '@/components/AmenitiesCard.astro'
+import {
+  Dumbbell,
+  ParkingCircle,
+  UtensilsCrossed,
+  Waves,
+  Wifi,
+  Wind,
+} from 'lucide-react'
+
+const amenities = [
+  {
+    icon: Wifi,
+    name: 'Free Wi-Fi',
+    description: 'High-speed internet throughout the property.',
+  },
+  {
+    icon: ParkingCircle,
+    name: 'Parking',
+    description: 'Secure on-site parking available 24/7.',
+  },
+  {
+    icon: Dumbbell,
+    name: 'Gym',
+    description: 'Fully equipped fitness center.',
+  },
+  { icon: Waves, name: 'Pool', description: 'Outdoor heated swimming pool.' },
+  {
+    icon: UtensilsCrossed,
+    name: 'Restaurant',
+    description: 'On-site dining with local cuisine.',
+  },
+  {
+    icon: Wind,
+    name: 'Air Conditioning',
+    description: 'Climate control in every room.',
+  },
+]
+---
+
+<section class="pt-28">
+  <div class="container">
+    <div class="text-center mb-8">
+      <h2 class="mb-1 text-500 font-600 md:text-600">Amenities</h2>
+      <p class="md:text-lg text-muted-foreground">
+        Enjoy our premium facilities designed for you comfort and convenience.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 lg:grid-cols-3">
+      {
+        amenities.map((amenity) => (
+          <AmenitiesCard
+            icon={amenity.icon}
+            name={amenity.name}
+            description={amenity.description}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>

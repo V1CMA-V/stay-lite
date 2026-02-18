@@ -1,0 +1,33 @@
+---
+import DeluxeImg from '@/assets/deluxe.webp'
+import ExecutiveImg from '@/assets/executive.webp'
+import LuxuryImg from '@/assets/luxury.webp'
+import CategoryCard from '@/components/CategoryCard.astro'
+---
+
+<section class="pt-28">
+  <div class="container">
+    <div class="max-w-[600px] mx-auto text-center mb-8">
+      <h2 class="mb-1 text-500 font-600 md:text-600">Experience luxury</h2>
+      <p class="md:text-lg text-muted-foreground">
+        Our rooms and suites are designed to provide you with the ultimate
+        comfort and luxury experience. From our Deluxe Rooms to our Executive
+        Suites, we have the perfect accommodation for you.
+      </p>
+    </div>
+
+    <div class="md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+      <CategoryCard
+        name="Luxury Suites"
+        image={LuxuryImg}
+        url="/luxury-rooms"
+      />
+      <CategoryCard name="Deluxe Rooms" image={DeluxeImg} url="/deluxe-rooms" />
+      <CategoryCard
+        name="Executive Suites"
+        image={ExecutiveImg}
+        url="/executive-suites"
+      />
+    </div>
+  </div>
+</section>
