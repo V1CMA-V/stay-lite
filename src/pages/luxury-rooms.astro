@@ -8,8 +8,6 @@ import { Image } from 'astro:assets'
 
 const filteredRooms =
   rooms.filter((room) => room.category === 'luxury-suite') || []
-
-console.log('Filtered rooms:', filteredRooms)
 ---
 
 <Layout

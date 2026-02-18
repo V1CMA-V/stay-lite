@@ -1,0 +1,186 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import type { GetStaticPaths } from 'astro'
+
+import { rooms } from '@/lib/constants'
+import { Image } from 'astro:assets'
+import {
+  AirVent,
+  Bath,
+  Camera,
+  Coffee,
+  Hotel,
+  Phone,
+  Ruler,
+  Tv,
+  Wifi,
+} from 'lucide-react'
+import Reservation from './Reservation'
+
+export const getStaticPaths = (() => {
+  return rooms.map(({ slug }) => {
+    return {
+      params: {
+        slug,
+      },
+    }
+  })
+}) satisfies GetStaticPaths
+
+const { slug } = Astro.params
+
+if (!slug) {
+  return Astro.redirect('/')
+}
+
+const room = rooms.find((room) => room.slug === slug)
+
+if (!room) {
+  return Astro.redirect('/')
+}
+---
+
+<Layout title={room.name} description="Room Details">
+  <div class="container pt-30">
+    <div class="mb-8 text-center">
+      <h1 class="text-400 font-600 mb-4">{room.name}</h1>
+
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        {
+          room.features.map((feature) => (
+            <div class="flex items-center justify-center gap-2">
+              {feature.icon === 'bed' && <Hotel className="text-primary" />}
+              {feature.icon === 'ruler' && <Ruler className="text-primary" />}
+              {feature.icon === 'camera' && <Camera className="text-primary" />}
+
+              <p>
+                {feature.name}: <strong>{feature.value}</strong>
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <Image
+          id="mainImage"
+          class="h-[500px] rounded-lg object-cover"
+          src={room.image}
+          alt={room.name}
+        />
+      </div>
+
+      {
+        room.thumbnails && room.thumbnails.length > 0 && (
+          <div class="mt-4 flex items-center justify-center gap-4 overflow-x-auto pb-2">
+            <div
+              class="thumbnail-item border-primary size-20 cursor-pointer overflow-hidden rounded-md border-2"
+              data-index="main"
+            >
+              <Image
+                id="mainImage"
+                class="h-full w-full rounded-lg object-cover"
+                src={room.image}
+                alt={`${room.name} - main`}
+              />
+            </div>
+
+            {room.thumbnails.map((thumbnail, index) => (
+              <div
+                class="thumbnail-item size-20 cursor-pointer overflow-hidden rounded-md border-2 hover:border-primary"
+                data-index={index}
+              >
+                <Image
+                  id="mainImage"
+                  class="h-full w-full rounded-lg object-cover"
+                  src={thumbnail}
+                  alt={`${room.name} - thumbnail ${index + 1}`}
+                />
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <div class="mt-16 md:grid md:grid-cols-2 md:gap-8">
+      <div>
+        <div class="mb-8">
+          <h3 class="text-300 font-600 mb-4">Description</h3>
+          <p>{room.description}</p>
+        </div>
+
+        <div>
+          <h3 class="text-300 font-600 mb-4">Room Amenities</h3>
+          <div class="mb-8 grid grid-cols-2 gap-4">
+            {
+              room.amenities.map((amenity) => (
+                <div class="flex items-center gap-4">
+                  {amenity.icon === 'wifi' && <Wifi className="text-primary" />}
+                  {amenity.icon === 'tv' && <Tv className="text-primary" />}
+                  {amenity.icon === 'ac' && (
+                    <AirVent className="text-primary" />
+                  )}
+                  {amenity.icon === 'coffee' && (
+                    <Coffee className="text-primary" />
+                  )}
+                  {amenity.icon === 'shower' && (
+                    <Bath className="text-primary" />
+                  )}
+
+                  {amenity.icon === 'room-service' && (
+                    <Phone className="text-primary" />
+                  )}
+
+                  <p>{amenity.name}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-300 font-600 mb-4">Customer Reviews</h3>
+          <p>Be the first to leave a review a room!</p>
+        </div>
+      </div>
+
+      <div>
+        <Reservation room={room} client:load />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const mainImage = document.getElementById('mainImage')
+    const thumbnailItems = document.querySelectorAll('.thumbnail-item')
+
+    if (mainImage && thumbnailItems.length > 0) {
+      const originalMainSrc = mainImage.getAttribute('src') || ''
+
+      thumbnailItems.forEach((thumbnail) => {
+        thumbnail.addEventListener('click', () => {
+          thumbnailItems.forEach((t) => t.classList.remove('border-primary'))
+          thumbnail.classList.add('border-primary')
+
+          const index = thumbnail.getAttribute('data-index')
+
+          if (index === 'main') {
+            mainImage.setAttribute('src', originalMainSrc)
+          } else {
+            const thumbnailImg = thumbnail.querySelector('img')
+
+            if (thumbnailImg) {
+              const thumbnailSrc = thumbnailImg.getAttribute('src') || ''
+              mainImage.setAttribute('src', thumbnailSrc)
+            }
+          }
+        })
+      })
+    }
+  })
+</script>
