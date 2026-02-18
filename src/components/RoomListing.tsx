@@ -12,7 +12,7 @@ const RoomListing = ({ room }: { room: Room }) => {
         >
           <Eye
             size={34}
-            className="invisible absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100"
+            className="invisible absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100 text-white"
           />
 
           <div className="absolute left-0 top-0 h-full w-full bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-60"></div>
