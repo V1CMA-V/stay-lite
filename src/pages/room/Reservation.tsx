@@ -19,7 +19,7 @@ import type { Room } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type ChangeEvent } from 'react'
 
 interface BookingData {
   checkIn: Date | undefined
@@ -39,6 +39,98 @@ const Reservation = ({ room }: { room: Room }) => {
     adults: 1,
     children: 0,
   })
+
+  const handleCheckInChange = (date: Date | undefined) => {
+    if (!date) {
+      setBookingData((prev) => ({
+        ...prev,
+        checkIn: undefined,
+      }))
+
+      return
+    }
+
+    // Normalize to local midnight
+    const localDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      0,
+      0,
+      0,
+      0,
+    )
+
+    setBookingData((prev) => ({
+      ...prev,
+      checkIn: localDate,
+    }))
+  }
+
+  const handleCheckOutChange = (date: Date | undefined) => {
+    if (!date) {
+      setBookingData((prev) => ({
+        ...prev,
+        checkOut: undefined,
+      }))
+
+      return
+    }
+
+    // Normalize to local midnight
+    const localDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      0,
+      0,
+      0,
+      0,
+    )
+
+    setBookingData((prev) => ({
+      ...prev,
+      checkOut: localDate,
+    }))
+  }
+
+  const handleNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+
+    setBookingData((prev) => ({
+      ...prev,
+      [name]: parseInt(value, 10),
+    }))
+  }
+
+  const getNumberOfDays = (
+    startDate: Date | undefined,
+    endDate: Date | undefined,
+  ) => {
+    if (!startDate || !endDate) {
+      return
+    }
+
+    const startDateTime = new Date(startDate).getTime()
+    const endDateTime = new Date(endDate).getTime()
+
+    const timeDifference = endDateTime - startDateTime
+
+    const days = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
+
+    return days
+  }
+
+  const numberOfDays = getNumberOfDays(
+    bookingData.checkIn,
+    bookingData.checkOut,
+  )
+
+  const totalPrice = room.price * bookingData.noOfRoom * numberOfDays!
+
+  const discountAmount = totalPrice * (room.discount / 100)
+
+  const totalPriceWithDiscount = totalPrice - discountAmount
 
   return (
     <section className="mt-10 md:mt-0">
@@ -68,8 +160,8 @@ const Reservation = ({ room }: { room: Room }) => {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {bookingData.checkIn
-                    ? format(bookingData.checkIn, 'ppp')
-                    : 'Check In'}
+                    ? format(bookingData.checkIn, 'PPP')
+                    : 'Pick a date'}
                 </Button>
               </PopoverTrigger>
 
@@ -77,6 +169,7 @@ const Reservation = ({ room }: { room: Room }) => {
                 <Calendar
                   mode="single"
                   selected={bookingData.checkIn}
+                  onSelect={handleCheckInChange}
                   initialFocus
                   disabled={(date) => {
                     const today = new Date()
@@ -101,8 +194,8 @@ const Reservation = ({ room }: { room: Room }) => {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {bookingData.checkOut
-                    ? format(bookingData.checkOut, 'ppp')
-                    : 'Check In'}
+                    ? format(bookingData.checkOut, 'PPP')
+                    : 'Pick a date'}
                 </Button>
               </PopoverTrigger>
 
@@ -110,12 +203,11 @@ const Reservation = ({ room }: { room: Room }) => {
                 <Calendar
                   mode="single"
                   selected={bookingData.checkOut}
-                  initialFocus
-                  disabled={(date) => {
-                    const today = new Date()
-                    today.setHours(0, 0, 0, 0)
-                    return date < today
-                  }}
+                  onSelect={handleCheckOutChange}
+                  disabled={(date) =>
+                    date < new Date() ||
+                    (bookingData.checkIn ? date <= bookingData.checkIn : false)
+                  }
                 />
               </PopoverContent>
             </Popover>
@@ -146,6 +238,20 @@ const Reservation = ({ room }: { room: Room }) => {
               name="noOfRoom"
               className="dark:bg-transparent dark:hover:bg-transparent"
               value={bookingData.noOfRoom}
+              onChange={handleNumberChange}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label>Adults</Label>
+            <Input
+              type="number"
+              min={1}
+              max={4}
+              name="adults"
+              className="dark:bg-transparent dark:hover:bg-transparent"
+              value={bookingData.adults}
+              onChange={handleNumberChange}
             />
           </div>
 
@@ -158,28 +264,28 @@ const Reservation = ({ room }: { room: Room }) => {
               name="children"
               className="dark:bg-transparent dark:hover:bg-transparent"
               value={bookingData.children}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>Adults</Label>
-            <Input
-              type="number"
-              min={1}
-              max={4}
-              name="adults"
-              className="dark:bg-transparent dark:hover:bg-transparent"
-              value={bookingData.adults}
+              onChange={handleNumberChange}
             />
           </div>
         </div>
         <div className="mt-8 flex items-center justify-between w-full">
-          <p className="font-600 text-200">
-            Total: {formatPrice(room.price * bookingData.noOfRoom)}
-            <span className="font-300 text-100">
-              ({room.price} x {bookingData.noOfRoom})
-            </span>
+          <div className="flex items-center gap-2">
+            {room.discount > 0 && totalPrice > 0 ? (
+              <>
+                <p className="font-600 line-through text-200 text-sm">
+                  {formatPrice(totalPrice)}
+                </p>
+                <p className="font-600 text-200">
+                  {formatPrice(totalPriceWithDiscount)}
+                </p>
+              </>
+            ) : (
+              <p className="font-600 text-200">{formatPrice(room.price)}</p>
+            )}
+          </div>
+          <p className="font-500 text-primary">
+            Applied {room.discount}% discount
           </p>
-          <p className="font-500 text-primary">Applied 50% discount</p>
         </div>
 
         <Button className="w-full mt-8" type="submit">
